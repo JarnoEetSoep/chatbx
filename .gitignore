@@ -74,6 +74,3 @@ typings/
 
 # FuseBox cache
 .fusebox/
-
-# data
-db/
