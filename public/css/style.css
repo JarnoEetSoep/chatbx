@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto';
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0px;
+    height: 100%;
+}
+
+#chatroom {
+    border: 0;
+    height: 80vh;
+    overflow-x: hidden;
+    width: 80%;
+    margin-left: 0;
+}
+
+#title {
+    display: inline-block;
+}
+
+p.message {
+    margin: 0px;
+    width: 100%;
+    min-height: 40px;
+    font-size: 16px;
+    padding: 1vh;
+    border-bottom: 1px solid #ccc;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.message {
+    border: 0;
+    width: 100%;
+}
+
+.timestamp {
+    float: right;
+    font-style: normal;
+}
+
+.form-inline {
+    width: 100%;
+}
+
+.right {
+    float: right;
+}
+
+#send-message {
+    width: 5%;
+}
+
+.fullwidth {
+    width:80% !important;
+}
+
+#buttons {
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid #ccc;
+    background-color: #fff;
+    width: 100%;
+    padding: 20px;
+    height: 13vh;
+}
+
+#send_message {
+    float: right;
+}
+
+.msgcontainer {
+    padding: 0;
+    overflow-y: auto; 
+}
+
+.scrollable {
+    overflow-y: auto; 
+    height: 100%;
+}
+
+#control > * {
+    height: 100%;
+}
+
+#control {
+    height:38px;
+}
+
+#infocard {
+    width: 20%;
+    margin-right: 0;
+    height: 80vh;
+    border: 1px solid #ccc;
+    border-bottom: 0;
+    border-radius: 2px;
+    padding-top: 20px;
+}
+
+#chatters {
+    border: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 94%;
+}
+
+.infocard-header {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 3px solid black;
+    width: 100%;
+}
+
+.btn-login {
+    float: right;
+    position: relative;
+    top: 1vh;
+    border-radius: 50px;
+    border: 2px solid rgb(75, 75, 75);
+    background-color: #eaeaea;
+    padding: 4px 20px;
+}
+
+.btn-login:hover {
+    background-color: #aeaeae;
+}
+
+.page-head {
+    text-align: center;
+    height: 7vh;
+}
+
+.contents {
+    width: 50%;
+}
+
+.forms {
+    padding: 25% 0;
+    height: 100vh;
+}
+
+.login {
+    border-right: 5px solid #eaeaea;
+}
+
+.formcontainer {
+    height: 100%;
+    background-color: #ccc;
+    border-radius: 3px;
+}
