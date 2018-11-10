@@ -76,3 +76,5 @@ typings/
 .fusebox/
 
 users.json
+
+chats.json
