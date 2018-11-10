@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-let chats = require('./chats.json');
-let users = require('./users.json');
+let chats = require('./db/db/chats.json');
+let users = require('./db/users.json');
 const fs = require('fs');
 
 app.set('view engine', 'ejs');
@@ -140,8 +140,8 @@ io.on('connection', socket => {
                 "createChats"
             ]
         };
-        fs.writeFileSync('./users.json', JSON.stringify(users,null,4));
-        users = require('./users.json');
+        fs.writeFileSync('./db/users.json', JSON.stringify(users,null,4));
+        users = require('./db/users.json');
     });
     socket.on('login', data => {
         // username
@@ -178,8 +178,8 @@ io.on('connection', socket => {
             path: pathName,
             type: (data.visible) ? 'public' : 'private'
         });
-        fs.writeFileSync('./chats.json', JSON.stringify(chats,null,4));
-        chats = require('./chats.json');
+        fs.writeFileSync('./db/chats.json', JSON.stringify(chats,null,4));
+        chats = require('./db/chats.json');
         socket.emit('redirect', { url: `/chats/${pathName}` });
     });
 });

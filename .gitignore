@@ -75,6 +75,5 @@ typings/
 # FuseBox cache
 .fusebox/
 
-users.json
-
-chats.json
+# data
+db/
