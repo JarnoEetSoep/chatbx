@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-let chats = require('./db/db/chats.json');
+let chats = require('./db/chats.json');
 let users = require('./db/users.json');
 const fs = require('fs');
 
