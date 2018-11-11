@@ -40,7 +40,11 @@
             "sendMessages",
             "getMessages",
             "commands",
-            "createChats"
+            "createChats",
+            "createChats",
+            "seeAllChats",
+            "createChatByName",
+            "sendImages"
         ]
     }
 }

@@ -35,6 +35,23 @@
                     <tbody id="chats"></tbody>
                 </table>
             </div>
+            <button class="btn btn-outline-secondary" style="display: none;" onclick="$('#createChat').dialog('open');" id="create">Create your own chat</button>
+            <div id="createChat" title="create a chat">
+                <div class="form-group">
+                    <label for="nameChat">Name chat</label>
+                    <input type="text" id="nameChat" class="form-control" placeholder="name chat" />
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="visible" />
+                    <label class="custom-control-label" for="visible">Visible to everyone</label>
+                </div>
+                <div class="custom-control custom-checkbox" style="display: none;" id="namecheckbox">
+                    <input type="checkbox" class="custom-control-input" id="nameaschat" />
+                    <label class="custom-control-label" for="nameaschat">Path is /chats/<i>chat_name</i></label>
+                </div>
+                <hr>
+                <button class="btn btn-outline-success" onclick="newChat();socket.emit('getChats');">Make chat</button>
+            </div>
             <%- include partials/loginModal %>
         <script>
             const socket = io.connect($(location).attr("origin"));
@@ -46,9 +63,33 @@
                 });
             });
 
-            socket.on('logged-in', () => {
+            socket.on('logged-in', data => {
+                (data.perms.includes('createChats')) ? $('#create').show() : $('#create').hide();
+                (data.perms.includes('createChatByName')) ? $('#namecheckbox').show() : $('#namecheckbox').hide();
                 socket.emit('getChats');
             });
+
+            $('#createChat').dialog({
+                autoOpen: false,
+                modal: true,
+                resizable: false,
+                draggable: false,
+                show: {
+                    effect: "fade",
+                    duration: 1000
+                },
+                hide: {
+                    effect: "fade",
+                    duration: 1000
+                }
+            });
+
+            socket.on('createChatError', msg => alert(msg));
+
+            function newChat() {
+                socket.emit('newChat', { name: $('#nameChat').val(), visible: $('#visible').is(':checked'), nameAsPath: $('#nameaschat').is(':checked') });
+                $('#createChat').dialog('close');
+            }
         </script>
     </body>
 </html>

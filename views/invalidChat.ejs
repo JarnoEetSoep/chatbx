@@ -22,7 +22,7 @@
                     <h2 style="text-align: center;"><i><%= invId %></i> is not a valid chat</h2>
                     <button style="float: right;" class="btn btn-login" onclick="$('#login').dialog('open');">Login</button>
                     <p>Try <a href="https://chatbx.herokuapp.com/chats">https://chatbx.herokuapp.com/chats</a> for a list of chats</p>
-                    <p id="create" style="display: none;">Or <button class="btn btn-outline-primary" onclick="$('#createChat').dialog('open');">create</button> a chat</p>
+                    <p id="create" style="display: none;">Or <button class="btn btn-outline-secondary" onclick="$('#createChat').dialog('open');">create</button> a chat</p>
                 </div>
             </div>
         </div>
@@ -72,6 +72,8 @@
                 socket.emit('newChat', { name: $('#nameChat').val(), visible: $('#visible').is(':checked'), nameAsPath: $('#nameaschat').is(':checked') });
                 $('#createChat').dialog('close');
             }
+
+            socket.on('chatCreated', url => window.location.href = url);
         </script>
     </body>
 </html>

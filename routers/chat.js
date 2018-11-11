@@ -1,4 +1,4 @@
-const chats = require('../chats.json');
+const chats = require('../db/chats.json');
 
 exports = module.exports = {};
 

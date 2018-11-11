@@ -120,7 +120,6 @@ io.on('connection', socket => {
         if(users[data.username]) return socket.emit('regError', `User ${data.username} does already exist.`);
         // password
         if(!(data.password.length > 7 && data.password.length < 21 && data.password.match(/^[0-9a-zA-Z\(\)\[\]{}\"\':;,\.\/\?\\\|=\+-_\*&\^%\$#@!~\`<>]+$/))) return socket.emit('regError', `Password is not strong enough / contains unusable characters.`);
-        socket.emit('logged-in', { username: data.username });
         if(names.filter(s => s.id == socket.id).length != 0) {
             names.filter(s => s.id == socket.id)[0].username = data.username
         } else {
@@ -140,6 +139,7 @@ io.on('connection', socket => {
                 "createChats"
             ]
         };
+        socket.emit('logged-in', { username: data.username, perms: users[data.username].permissions });
         fs.writeFileSync('./db/users.json', JSON.stringify(users,null,4));
         users = require('./db/users.json');
     });
@@ -180,7 +180,7 @@ io.on('connection', socket => {
         });
         fs.writeFileSync('./db/chats.json', JSON.stringify(chats,null,4));
         chats = require('./db/chats.json');
-        socket.emit('redirect', { url: `/chats/${pathName}` });
+        socket.emit('chatCreated', { url: `/chats/${pathName}` });
     });
 });
 
