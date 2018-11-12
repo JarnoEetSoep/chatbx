@@ -1,0 +1,49 @@
+{
+    "Guest": {
+        "display": "Guest",
+        "inList": true,
+        "password": "uwqe809qwekwnfdww=we20140-421",
+        "permissions": [
+            "sendMessages",
+            "getMessages"
+        ]
+    },
+    "Muted": {
+        "display": "Muted",
+        "inList": true,
+        "password": "ewfuUIygw8qdhwqj*(@jkffwj3",
+        "permissions": [
+            "getMessages"
+        ]
+    },
+    "Admin": {
+        "display": "<b style=\"color: #982221;\">Admin</b>",
+        "inList": false,
+        "password": "p@ssw0rd",
+        "permissions": [
+            "sendMessages",
+            "getMessages",
+            "commands",
+            "createChats",
+            "seeAllChats",
+            "createChatByName",
+            "sendImages",
+            "logoutOthers",
+            "mute"
+        ]
+    },
+    "Yuri": {
+        "display": "<b style=\"color: #226721;font-weight:normal;\">Yuri</b>",
+        "inList": true,
+        "password": "YURI",
+        "permissions": [
+            "sendMessages",
+            "getMessages",
+            "commands",
+            "createChats",
+            "seeAllChats",
+            "createChatByName",
+            "sendImages"
+        ]
+    }
+}
