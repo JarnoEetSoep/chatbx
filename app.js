@@ -14,7 +14,7 @@ app.get('/emoji(list)?', (req, res) => require('./routers/emoji').run(req, res))
 app.get('/chats', (req, res) => require('./routers/chats').run(req, res));
 app.get('/about', (req, res) => require('./routers/about').run(req, res));
 app.get('/users', (req, res) => require('./routers/users').run(req, res));
-//app.get('/login', (req, res) => require('./routers/login').run(req, res));
+app.get('/login', (req, res) => require('./routers/login').run(req, res));
 
 server = app.listen(process.env.PORT || 80, "0.0.0.0", () => console.log(`Connected on ${server.address().address}:${server.address().port}`));
 
