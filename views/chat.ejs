@@ -25,6 +25,7 @@
                 <h1 id="title"><%= title %></h1>
                 <!-- <button class="btn btn-login" onclick="window.location.href = `/login?return=${window.location.href}`">Login</button> -->
                 <button class="btn btn-login" onclick="$('#login').dialog('open');">Login</button>
+                <%- include partials/menu %>
             </div>
             <div class="row">
                 <div id="chatroom" class="container-fluid msgcontainer">

@@ -19,6 +19,7 @@
         <div style="width:40%;margin-left:auto;margin-right:auto;padding-left:15px;padding-right:15px">
             <div style="width:100%;margin:0;padding:50% 0;">
                 <div style="border:1px solid #ccc;border-radius:5px;padding:10px">
+                    <%- include partials/menu %>
                     <h2 style="text-align: center;"><i><%= invId %></i> is not a valid chat</h2>
                     <button style="float: right;" class="btn btn-login" onclick="$('#login').dialog('open');">Login</button>
                     <p>Try <a href="https://chatbx.herokuapp.com/chats">https://chatbx.herokuapp.com/chats</a> for a list of chats</p>
