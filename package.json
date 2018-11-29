@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "browser-sync": "^2.26.3",
+    "browsersync": "0.0.1-security",
+    "connect-browser-sync": "^2.1.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "socket.io": "^2.1.1"

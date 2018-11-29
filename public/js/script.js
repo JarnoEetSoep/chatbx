@@ -5,7 +5,7 @@ $(document).ready(() => {
         resizable: false,
         draggable: false,
         width: 650,
-        height: 700,
+        height: 400,
         show: {
             effect: "fade",
             duration: 1000

@@ -27,5 +27,8 @@
             </div>
         </div>
         <%- include partials/loginModal %>
+        <script>
+            const socket = io.connect($(location).attr("origin"));
+        </script>
     </body>
 </html>

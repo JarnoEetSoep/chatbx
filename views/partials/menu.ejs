@@ -1,7 +1,28 @@
-<div class="menu">
-    <a href="/" class="btn btn-link">Home</a>
-    <a href="/chats" class="btn btn-link">Chats</a>
-    <a href="/emoji" class="btn btn-link">Emoji</a>
-    <a href="/about" class="btn btn-link">About</a>
-    <a href="/users" class="btn btn-link">Users</a>
-</div>
+<nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+    <span class="navbar-brand mb-0 h1"><%= (typeof title != "undefined") ? title : "ChatBx" %></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="navbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/chats">Chats</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/emoji">Emoji</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Users">Users</a>
+            </li>
+        </ul>
+    </div>
+    <div class="navbar-collapse collapse w-10 order-2 dual-collapse2" id="navbar">
+        <button class="btn btn-outline-secondary" onclick="$('#login').dialog('open');">Login</button>
+    </div>
+</nav>

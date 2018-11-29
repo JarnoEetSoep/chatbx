@@ -8,6 +8,30 @@ app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 
+if(app.get('env') === 'development') {
+    /*const browserSync = require('browser-sync');
+    const bs = browserSync.create();
+    bs.watch('*.css', (event, file) => {
+        if(event === "change") {
+            bs.reload("*.css");
+        }
+    });
+    bs.watch('*.ejs', (event, file) => {
+        if(event === "change") {
+            bs.reload("*.ejs");
+        }
+    });
+    bs.init({
+        logSnippet: false,
+        logLevel: 'info',
+        ui: {
+            enabled: false
+        },
+        logPrefix: "ChatBx"
+    });
+    app.use(require('connect-browser-sync')(bs));*/
+}
+
 app.get('/', (req, res) => require('./routers/index').run(req, res));
 app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));
 app.get('/emoji(list)?', (req, res) => require('./routers/emoji').run(req, res));
