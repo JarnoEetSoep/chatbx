@@ -4,5 +4,23 @@
         "id": "0",
         "path": "general",
         "type": "public"
+    },
+    {
+        "name": "spam",
+        "id": "4201318662",
+        "path": "spam",
+        "type": "public"
+    },
+    {
+        "name": "index",
+        "id": "3678127031",
+        "path": "index",
+        "type": "public"
+    },
+    {
+        "name": "test",
+        "id": "1392204122",
+        "path": "1392204122",
+        "type": "private"
     }
 ]

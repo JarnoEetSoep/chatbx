@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light col-sm-12">
     <span class="navbar-brand mb-0 h1"><%= (typeof title != "undefined") ? title : "ChatBx" %></span>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -18,11 +18,15 @@
                 <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/Users">Users</a>
+                <a class="nav-link" href="/users">Users</a>
             </li>
         </ul>
     </div>
     <div class="navbar-collapse collapse w-10 order-2 dual-collapse2" id="navbar">
-        <button class="btn btn-outline-secondary" onclick="$('#login').dialog('open');">Login</button>
+        <% if(!isAuthenticated) { %>
+            <a class="btn btn-outline-secondary" href="/login">Login</a>
+        <% } else { %>
+            <a class="btn btn-outline-secondary" href="/logout">Logout</a>
+        <% } %>
     </div>
 </nav>

@@ -8,12 +8,12 @@ $(() => {
     socket.on('othermessage', data => {
         notification_sound.play();
         let d = new Date();
-        $("#chatroom").prepend(`<p class="message">${(data.username != "") ? `${data.username}: ` : ""}${data.message}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
+        $("#chatroom .simplebar-content").prepend(`<p class="message">${data.message}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
     });
 
     socket.on('message', data => {
         let d = new Date();
-        $("#chatroom").prepend(`<p class="message">${(data.username != "") ? `${data.username}: ` : ""}${data.message}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
+        $("#chatroom .simplebar-content").prepend(`<p class="message">${data.message}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
     });
 
     send_message.click(() => {
@@ -101,7 +101,7 @@ $(() => {
     socket.on('chatter_joined', data => {
         chatter_amount++;
         $('#chatter_amount').text(chatter_amount);
-        $('#chatters').append(`<p id="${data.ip}">${data.username}</p>`);
+        $('#chatters .simplebar-content').append(`<p id="${data.ip}">${data.username}</p>`);
     });
 
     socket.on('chatter_left', data => {
@@ -111,8 +111,11 @@ $(() => {
     });
 
     socket.on('changename', data => {
-        $(`#${data.ip}`.replace(/(:|\.)/g, '\\$1')).html(data.newname);
+        $(`#${data.ip}`.replace(/(:|\.)/g, '\\$1')).text(data.newname);
     });
+
+    let SBchat = new SimpleBar($('#chatroom')[0]);
+    let SBinfocard = new SimpleBar($('#infocard')[0]);
 });
 
 const notification_sound = new Audio('/sound/notification.mp3');
@@ -133,5 +136,5 @@ let chatter_amount = 1;
 function sendMessage(msg) {
     if($('#message').val().trim() == "") return;
     $('#message').val("");
-    socket.emit('message', {message: msg, username: socket.username});
+    socket.emit('message', { message: msg });
 }

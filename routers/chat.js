@@ -5,12 +5,14 @@ exports = module.exports = {};
 exports.run = (req, res) => {
     if(chats.filter(chat => chat.path == req.params.chatId).length == 0) {
         res.render('invalidChat', {
-            invId: req.params.chatId
+            invId: req.params.chatId,
+            isAuthenticated: req.isAuthenticated()
         });
     } else {
         res.render("chat", {
             chatId: req.params.chatId,
-            title: chats.filter(chat => chat.path == req.params.chatId)[0].name
+            title: chats.filter(chat => chat.path == req.params.chatId)[0].name,
+            isAuthenticated: req.isAuthenticated()
         });
     }
 }
