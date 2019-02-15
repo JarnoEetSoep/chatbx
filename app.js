@@ -67,6 +67,9 @@ app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieparser('Keyboard cat'));
+app.use((err, req, res, next) => {
+    res.status(err.status).send('Jammerrrr.');
+});
 
 app.get('/', (req, res) => require('./routers/index').run(req, res));
 app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));
