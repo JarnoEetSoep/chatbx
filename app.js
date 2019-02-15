@@ -23,7 +23,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const sharedsession = require('express-socket.io-session');
 
-if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'Keyboard cat';
+if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'GydsvysYdwfyGYdggwfGYWefhncd';
 const session = expressSession({
     genid: () => uuid(),
     secret: process.env.SECRET_KEY_BASE,
