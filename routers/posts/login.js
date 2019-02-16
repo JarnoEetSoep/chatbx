@@ -6,8 +6,10 @@ exports.run = (req, res, next, passport) => {
         if(!user) return res.redirect('/login');
         req.logIn(user, err => {
             if(err) return next(err);
+
+            // nope
+            res.redirect(`/users/${require('../../db/users.json').filter(u => u.username == req.body.username)[0].id}`);
             next(null, user);
-            return res.redirect(`/users/${require('../../db/users.json').filter(u => u.username == req.body.username)[0].id}`);
         });
     })(req, res, next);
 };

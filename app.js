@@ -9,7 +9,7 @@ const fs = require('fs');
 const https = require('https');
 const path = require('path');
 const colors = require('colors');
-const commandHandler = require('./command-handler.js');
+const commandHandler = require('./command-handler');
 const uuid = require('uuid/v4');
 const expressSession = require('express-session');
 const store = new (require('connect-mongo')(expressSession)) ({
@@ -22,6 +22,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const sharedsession = require('express-socket.io-session');
+const handler404 = require('./routers/404');
 
 if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'GydsvysYdwfyGYdggwfGYWefhncd';
 const session = expressSession({
@@ -67,9 +68,6 @@ app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieparser('Keyboard cat'));
-app.use((err, req, res, next) => {
-    res.status(err.status).send('Jammerrrr.');
-});
 
 app.get('/', (req, res) => require('./routers/index').run(req, res));
 app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));
@@ -87,6 +85,8 @@ app.post('/register', (req, res, next) => {
     db.users = require('./db/users.json');
     require('./routers/posts/login').run(req, res, next, passport, pp2sio);
 });
+
+app.use((req, res, next) => handler404.run(req, res));
 
 const getSockets = room => {
     return Object.entries(io.sockets.adapter.rooms[room] === undefined ?

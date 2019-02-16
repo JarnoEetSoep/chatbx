@@ -152,3 +152,7 @@ p.message {
     background-color: #ccc;
     border-radius: 3px;
 }
+
+.row-link {
+    cursor: pointer;
+}

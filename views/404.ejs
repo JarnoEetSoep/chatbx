@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <%- include partials/head %>
+    </head>
+    <body>
+        <div class="container-fluid" id="pageContainer">
+            <div class="row page-head">
+                <%- include partials/menu %>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p>HOI</p>
+                </div>
+            </div>
+        </div>
+        <%- include partials/scripts %>
+        <script>
+            const socket = io.connect($(location).attr("origin"));
+        </script>
+    </body>
+</html>

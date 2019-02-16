@@ -18,11 +18,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                <% users.forEach(e => { %>
-                    <tr>
-                        <td><%= e.username %></td>
-                        <td><%= e.rank %></td>
-                        <td><%= e.id %></td>
+                <% users.forEach(user => { %>
+                    <tr onclick="window.location.pathname = '/users/<%- user.id %>';" class="row-link">
+                        <td><%= user.username %></td>
+                        <td><%= user.rank %></td>
+                        <td><%= user.id %></td>
                     </tr>
                 <% }); %>
                 </tbody>

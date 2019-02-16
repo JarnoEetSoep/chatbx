@@ -17,14 +17,7 @@
                             <th scope="col">Link</th>
                         </tr>
                     </thead>
-                    <tbody id="chats">
-                        <% cts.forEach(chat => { %>
-                            <tr>
-                                <td><%= chat.name %></td>
-                                <td><a href="<%= window.location.href><%= chat.path>"><%= window.location.href><%= chat.path></a></td>
-                            </tr>
-                        <% } %>
-                    </tbody>
+                    <tbody id="chats"></tbody>
                 </table>
             </div>
             <button class="btn btn-outline-secondary" style="display: none;" onclick="$('#createChat').dialog('open');" id="create">Create your own chat</button>
@@ -48,6 +41,16 @@
         <%- include partials/scripts %>
         <script>
             const socket = io.connect($(location).attr("origin"));
+
+            const cts = JSON.parse('<%- cts %>');
+            cts.forEach(chat => {
+                $('#chats').append(`
+                <tr>
+                    <td>${chat.name}</td>
+                    <td><a href="${window.location.href}/${chat.path}">${window.location.href}/${chat.path}</a></td>
+                </tr>
+                `);
+            });
 
             const perms = JSON.parse('<%- perms %>');
             (perms.includes('createChats')) ? $('#create').show() : $('#create').hide();
