@@ -6,7 +6,7 @@ db.users = require('./db/users.json');
 db.emoji = require('./db/emoji.json');
 db.ranks = require('./db/ranks.json');
 const fs = require('fs');
-const https = require('https')
+const https = require('https');
 const path = require('path');
 const colors = require('colors');
 const commandHandler = require('./command-handler');
@@ -56,7 +56,7 @@ const cert = {
     cert: fs.readFileSync(path.join(__dirname, '/cert/server.crt'))
 };
 
-const server = https.createServer(cert, app);
+const server = ((process.env.at_heroku) ? app.listen() : https.createServer(cert, app)).listen(process.env.PORT || 443, "0.0.0.0", () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));;
 const io = require('socket.io')(server);
 
 app.set('view engine', 'ejs');
@@ -237,5 +237,3 @@ messageParser = (msg, ranks, perms, user) => {
     
     return `${ranks[user.rank].prefix}${user.name}${ranks[user.rank].suffix}${res}`;
 }
-
-server.listen(process.env.PORT || 443, "0.0.0.0", () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));
