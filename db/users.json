@@ -1,20 +1,8 @@
 [
     {
         "username": "J@RN0",
-        "id": "3742940063",
-        "password": "p@ssw0rd",
-        "rank": "admin"
-    },
-    {
-        "username": "Yuri",
-        "id": "1828198429",
-        "password": "YURI",
-        "rank": "moderator"
-    },
-    {
-        "username": "Hello",
-        "id": "3173460330",
-        "password": "HelloWorld",
+        "id": "5899886717",
+        "password": "$2b$10$n7HMyJdokkdjwpwH0Ncn7eCk.dfazy9xzLGXyeT3PgGGTyK38GWii",
         "rank": "user"
     }
 ]

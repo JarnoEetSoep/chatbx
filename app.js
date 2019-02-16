@@ -6,25 +6,25 @@ db.users = require('./db/users.json');
 db.emoji = require('./db/emoji.json');
 db.ranks = require('./db/ranks.json');
 const fs = require('fs');
-const https = require('https');
+const https = require('https')
 const path = require('path');
 const colors = require('colors');
 const commandHandler = require('./command-handler');
 const uuid = require('uuid/v4');
 const expressSession = require('express-session');
 const store = new (require('connect-mongo')(expressSession)) ({
-    // url: 'mongodb://localhost/chatbx-sessions'
-    url: `mongodb://admin:${encodeURIComponent('[6YzB>LV:7Xp')}@chatbx-shard-00-00-o65kb.azure.mongodb.net:27017,chatbx-shard-00-01-o65kb.azure.mongodb.net:27017,chatbx-shard-00-02-o65kb.azure.mongodb.net:27017/chatbx?ssl=true&replicaSet=chatbx-shard-0&authSource=admin&retryWrites=true`
+    url: process.env.mongoURI
 });
 const cookieparser = require('cookie-parser');
 const passportSocketIo = require('passport.socketio');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 const sharedsession = require('express-socket.io-session');
 const handler404 = require('./routers/404');
 
-if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'GydsvysYdwfyGYdggwfGYWefhncd';
+if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'Keyboard cat';
 const session = expressSession({
     genid: () => uuid(),
     secret: process.env.SECRET_KEY_BASE,
@@ -37,7 +37,7 @@ const pp2sio = new class pp2sio extends require('events') { constructor() { supe
 passport.use(new LocalStrategy((username, password, done) => {
     let user = db.users.filter(u => u.username == username)[0];
     if(!user) return done(null, false, { message: 'Incorrect username.' });
-    if(user.password != password) return done(null, false, { message: 'Incorrect password.' });
+    if(!bcrypt.compareSync(password, user.password)) return done(null, false, { message: 'Incorrect password.' });
     return done(null, user);
 }));
 
@@ -67,7 +67,7 @@ app.use(bodyParser.json())
 app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cookieparser('Keyboard cat'));
+app.use(cookieparser(process.env.SECRET_KEY_BASE));
 
 app.get('/', (req, res) => require('./routers/index').run(req, res));
 app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));

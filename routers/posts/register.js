@@ -1,4 +1,5 @@
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 
 exports = module.exports = {};
 
@@ -9,26 +10,10 @@ exports.run = (req, res, next, passport, users) => {
     // password
     if(!(req.body.password.length > 7 && req.body.password.length < 21 && req.body.password.match(/^[0-9a-zA-Z\(\)\[\]{}\"\':;,\.\/\?\\\|=\+-_\*&\^%\$#@!~\`<>]+$/))) return next(`Password is too short, too long or contains unusable characters.`);
     
-    /* SOCKET.IO
-    if(users.filter(s => s.id == socket.id).length != 0) {
-        users.filter(s => s.id == socket.id)[0].name = data.username;
-    } else {
-        users.push({
-            name: data.username,
-            rank: 'user',
-            id: socket.id
-        });
-    }
-
-    socket.user.name = data.username;
-    socket.user.rank = 'user';
-    io.sockets.emit('changename', { ip: `${socket.request.connection.remoteAddress}:${socket.request.connection.remotePort}`, newname: data.username });
-    */
-    
     users.push({
         username: req.body.username,
         id: idgen(users),
-        password: req.body.password,
+        password: bcrypt.hashSync(req.body.password, parseInt(process.env.saltRounds)),
         rank: 'user'
     });
 
