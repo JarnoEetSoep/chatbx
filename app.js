@@ -211,6 +211,12 @@ io.on('connection', socket => {
 
 const messageParser = (msg, ranks, perms, user) => {
     let res = ` ${msg} `;
+    // special chars
+    res = res.replace(/&/g,"&amp;");
+    res = res.replace(/</g,"&lt;");
+    res = res.replace(/>/g,"&gt;");
+    res = res.replace(/"/g,"&#34;");
+    res = res.replace(/'/g,"&#39;");
     // markdown hyperlinks: [google](https://www.google.com) => <a href="https://www.google.com">google</a>
     res = res.replace(/\[(.*?)\]\((https?:\/\/\w*\.\w*\.?[^\s]*)\)/g, '<a href="$2">$1</a>');
     // just a normal link: https://www.google.com => <a href="https://www.google.com">https://www.google.com</a>
@@ -218,13 +224,7 @@ const messageParser = (msg, ranks, perms, user) => {
         let re = ` <a href="${url.trim()}">${url.trim()}</a> `;
         if(url.trim().match(/(.jpg|.png|.jpeg|.gif|.tiff)$/) && perms.includes('sendImages')) re += `\n<img src="${url.trim()}"></img>`
         return re;
-    });
-    // special chars
-    res = res.replace(/&/g,"&amp;");
-    res = res.replace(/</g,"&lt;");
-    res = res.replace(/>/g,"&gt;");
-    res = res.replace(/"/g,"&#34;");
-    res = res.replace(/'/g,"&#39;");
+    })
     // markdown layout __, _, **, *
     res = res.replace(/__(\S+)__/g, '<b>$1</b>');
     res = res.replace(/\*\*(\S+)\*\*/g, '<b>$1</b>');
