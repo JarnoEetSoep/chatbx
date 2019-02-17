@@ -32,7 +32,7 @@ const session = expressSession({
     saveUninitialized: true,
     store: store
 });
-const pp2sio = new class pp2sio extends require('events') { constructor() { super() } };
+const pp2sio = new class pp2sio extends require('events') { constructor() { super() } };  // PassPort to Socket.IO
 
 passport.use(new LocalStrategy((username, password, done) => {
     let user = db.users.filter(u => u.username == username)[0];
@@ -56,7 +56,7 @@ const cert = {
     cert: fs.readFileSync(path.join(__dirname, '/cert/server.crt'))
 };
 
-const server = ((process.env.at_heroku) ? app.listen() : https.createServer(cert, app)).listen(process.env.PORT || 443, "0.0.0.0", () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));;
+const server = ((process.env.at_heroku) ? app : https.createServer(cert, app)).listen(process.env.PORT || 443, "0.0.0.0", () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));;
 const io = require('socket.io')(server);
 
 app.set('view engine', 'ejs');
