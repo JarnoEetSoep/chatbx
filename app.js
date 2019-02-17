@@ -13,7 +13,7 @@ const commandHandler = require('./command-handler');
 const uuid = require('uuid/v4');
 const expressSession = require('express-session');
 const store = new (require('connect-mongo')(expressSession)) ({
-    url: process.env.mongoURI
+    url: (process.env.at_heroku) ? process.env.mongoURI : 'mongodb://localhost:27017/chatbx'
 });
 const cookieparser = require('cookie-parser');
 const passportSocketIo = require('passport.socketio');

@@ -22,8 +22,8 @@ module.exports = (io, socket, message, users, db, getSockets) => {
 
         if(!['moderator', 'admin'].includes(socket.user.rank)) return socket.emit('message', { message: '[Bx]: You are not permitted to send iframes' });
         if(args.length < 1) return socket.emit('message', { message: '[Bx]: You have to enter all parameters' });
-        if(args.length > 1 && args[1] != 'true') socket.to(socket.chatId).broadcast.emit('othermessage', { message: `<iframe style="border:0;" src="${args[0]}"></iframe>` });
-        socket.emit('message', { message: `<div style="padding:0.5em;width:35%;height:200px;" class="resizable"><iframe style="border:0;resize:both;overflow:auto;height:100%;width:100%;" src="${args[0]}"></iframe></div>` });
+        if(args.length > 1 && args[1] != 'true') socket.to(socket.chatId).broadcast.emit('othermessage', { message: `<div style="width:35%;height:200px;" class="resizable"><iframe style="border:0;height:100%;width:100%;" src="${args[0]}"></iframe></div>` });
+        socket.emit('message', { message: `<div style="width:35%;height:200px;" class="resizable"><iframe style="border:0;height:100%;width:100%;" src="${args[0]}"></iframe></div>` });
         if(args.length > 1 && args[1] != 'true') io.to(socket.chatId).emit('makeResizable', '.resizable');
         else socket.emit('makeResizable', '.resizable');
 

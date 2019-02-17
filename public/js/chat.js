@@ -115,7 +115,28 @@ $(() => {
     });
 
     socket.on('makeResizable', selector => {
-        $(selector).resizable();
+        $(selector).resizable({
+            maxWidth: $('#chatroom').width(),
+            start: (event, ui) => {
+                ui.element.append($("<div/>", {
+                    id: "iframe-barrier",
+                    css: {
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0,
+                        "z-index": 10
+                    }
+                }));
+            },
+            stop: (event, ui) => {
+                $("#iframe-barrier", ui.element).remove();
+            },
+            resize: (event, ui) => {
+                $("iframe", ui.element).width(ui.size.width).height(ui.size.height);
+            }
+        });
     });
 
     let SBchat = new SimpleBar($('#chatroom')[0]);
