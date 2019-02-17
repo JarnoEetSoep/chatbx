@@ -114,6 +114,10 @@ $(() => {
         $(`#${data.ip}`.replace(/(:|\.)/g, '\\$1')).text(data.newname);
     });
 
+    socket.on('makeResizable', selector => {
+        $(selector).resizable();
+    });
+
     let SBchat = new SimpleBar($('#chatroom')[0]);
     let SBinfocard = new SimpleBar($('#infocard')[0]);
 });
