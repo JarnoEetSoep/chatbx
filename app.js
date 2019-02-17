@@ -79,11 +79,11 @@ app.get('/login', (req, res) => require('./routers/login').run(req, res));
 app.get('/logout', (req, res) => require('./routers/logout').run(req, res, pp2sio));
 app.get('/users/:userId', (req, res) => require('./routers/user').run(req, res));
 
-app.post('/login', (req, res, next) => require('./routers/posts/login').run(req, res, next, passport, pp2sio));
+app.post('/login', (req, res, next) => require('./routers/posts/login').run(req, res, next, passport));
 app.post('/register', (req, res, next) => {
     require('./routers/posts/register').run(req, res, next, passport, db.users);
     db.users = require('./db/users.json');
-    require('./routers/posts/login').run(req, res, next, passport, pp2sio);
+    require('./routers/posts/login').run(req, res, next, passport);
 });
 
 app.use((req, res, next) => handler404.run(req, res));
@@ -209,7 +209,7 @@ io.on('connection', socket => {
     });
 });
 
-messageParser = (msg, ranks, perms, user) => {
+const messageParser = (msg, ranks, perms, user) => {
     let res = ` ${msg} `;
     // special chars
     res = res.replace(/&/g,"&amp;");
