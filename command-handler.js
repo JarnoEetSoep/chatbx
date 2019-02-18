@@ -5,7 +5,7 @@ module.exports = (io, socket, message, users, db, getSockets) => {
 
     if(cmd == 'help') {
 
-        socket.emit('message', { message: '[Bx]: Help message<br>[Bx]: Commands:<br>[Bx]:     /help<br>[Bx]:     /whisper &lt;chatter&gt; &lt;message&gt;<br>[Bx]:     /iframe* &lt;url&gt; [private: true|false]<br><br>Commands and parameters with an asterisk, are Admin-only' });
+        socket.emit('message', { message: '[Bx]: Help message<br>[Bx]: Commands:<br>[Bx]:     /help<br>[Bx]:     /whisper &lt;chatter&gt; &lt;message&gt;<br>[Bx]:     /iframe* &lt;url&gt; [public: true|false (standard false)]<br><br>Commands and parameters with an asterisk, are Admin-only' });
 
     } else if(cmd == 'whisper') {
 

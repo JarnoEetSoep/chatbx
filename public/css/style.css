@@ -65,7 +65,6 @@ p.message {
     border-top: 1px solid #ccc;
     background-color: #fff;
     padding: 20px;
-    height: 13vh;
 }
 
 #send_message {
@@ -115,23 +114,9 @@ p.message {
     width: 100%;
 }
 
-.btn-login {
-    float: right;
-    position: relative;
-    top: 1vh;
-    border-radius: 50px;
-    border: 2px solid rgb(75, 75, 75);
-    background-color: #eaeaea;
-    padding: 4px 20px;
-}
-
-.btn-login:hover {
-    background-color: #aeaeae;
-}
-
 .page-head {
     text-align: center;
-    height: 7vh;
+    margin-bottom: -1px;
 }
 
 .contents {
