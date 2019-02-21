@@ -7,6 +7,7 @@ db.emoji = require('./db/emoji.json');
 db.ranks = require('./db/ranks.json');
 const fs = require('fs');
 const https = require('https');
+const http = require('http');
 const path = require('path');
 const colors = require('colors');
 const commandHandler = require('./command-handler');
@@ -32,7 +33,7 @@ const session = expressSession({
     saveUninitialized: true,
     store: store
 });
-const pp2sio = new class pp2sio extends require('events') { constructor() { super() } };  // PassPort to Socket.IO
+const pp2sio = new class pp2sio extends require('events') { constructor() { super() } };  // PassPort to Socket.IO, we need it when we logout
 
 passport.use(new LocalStrategy((username, password, done) => {
     let user = db.users.filter(u => u.username == username)[0];
@@ -56,7 +57,7 @@ const cert = {
     cert: fs.readFileSync(path.join(__dirname, '/cert/server.crt'))
 };
 
-const server = ((process.env.at_heroku) ? app : https.createServer(cert, app)).listen(process.env.PORT || 443, "0.0.0.0", () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));;
+const server = (process.env.at_heroku) ? http.createServer(app) : https.createServer(cert, app);
 const io = require('socket.io')(server);
 
 app.set('view engine', 'ejs');
@@ -125,9 +126,11 @@ io.on('connection', socket => {
     }
     users.push(socket.user);
 
-    pp2sio.on('logout', data => {
+    const logoutCb = () => {
         socket.disconnect(true);
-    });
+    }
+
+    pp2sio.once('logout', logoutCb);
 
     socket.on('join', data => {
         socket.chatId = data.chatId;
@@ -169,6 +172,8 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         socket.broadcast.to(socket.chatId).emit('chatter_left', { ip: `${socket.request.connection.remoteAddress}:${socket.request.connection.remotePort}` });
         console.log(colors.red.bold(`${socket.request.connection.remoteAddress}:${socket.request.connection.remotePort} disconnected`));
+
+        pp2sio.removeListener('logout', logoutCb);
     });
 
     socket.on('getChats', () => {
@@ -237,3 +242,5 @@ const messageParser = (msg, ranks, perms, user) => {
     
     return `${ranks[user.rank].prefix}${user.name}${ranks[user.rank].suffix}${res}`;
 }
+
+server.listen(process.env.PORT || 443, '0.0.0.0', () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));

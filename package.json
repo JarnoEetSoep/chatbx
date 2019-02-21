@@ -12,6 +12,10 @@
     "node": "8.10.0",
     "npm": "6.7.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JarnoEetSoep/chatbx.git"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -26,11 +30,11 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport.socketio": "^3.7.0",
-    "session-file-store": "^1.2.0",
     "socket.io": "^2.1.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"
-  }
+  },
+  "homepage": "https://chatbx.herokuapp.com"
 }
