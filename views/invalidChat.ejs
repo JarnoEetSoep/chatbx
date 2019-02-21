@@ -5,64 +5,23 @@
         <%- include partials/head %>
     </head>
     <body>
+        <%- include partials/menu %>
         <div style="width:40%;margin-left:auto;margin-right:auto;padding-left:15px;padding-right:15px">
-            <div style="width:100%;margin:0;padding:50% 0;">
-                <div style="border:1px solid #ccc;border-radius:5px;padding:10px">
-                    <%- include partials/menu %>
-                    <h2 style="text-align: center;"><i><%= invId %></i> is not a valid chat</h2>
+            <div style="width:100%;margin:0;padding:30% 0;">
+                <div id="card" style="border:1px solid #ccc;border-radius:5px;padding:10px;max-height:40vh;">
+                    <h2 style="text-align:center;word-break:break-all;"><i><%= invId %></i><br>is not a valid chat</h2>
                     <p>Try <a href="https://chatbx.herokuapp.com/chats">https://chatbx.herokuapp.com/chats</a> for a list of chats</p>
-                    <p id="create" style="display: none;">Or <button class="btn btn-outline-secondary" onclick="$('#createChat').dialog('open');">create</button> a chat</p>
+                    <% if(isAuthenticated) { %>
+                        <p id="create"> Or <a class="btn btn-outline-secondary" href="/chats">create</a> a chat</p>
+                    <% } %>
                 </div>
             </div>
-        </div>
-        <div id="createChat" title="create a chat">
-            <div class="form-group">
-                <label for="nameChat">Name chat</label>
-                <input type="text" id="nameChat" class="form-control" value="<%= invId %>" placeholder="name chat" />
-            </div>
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="visible" />
-                <label class="custom-control-label" for="visible">Visible to everyone</label>
-            </div>
-            <div class="custom-control custom-checkbox" style="display: none;" id="namecheckbox">
-                <input type="checkbox" class="custom-control-input" id="nameaschat" />
-                <label class="custom-control-label" for="nameaschat">Path is /chats/<i>chat_name</i></label>
-            </div>
-            <hr>
-            <button class="btn btn-outline-success" onclick="newChat();">Make chat</button>
         </div>
         <%- include partials/scripts %>
         <script>
             const socket = io.connect($(location).attr("origin"));
 
-            $('#createChat').dialog({
-                autoOpen: false,
-                modal: true,
-                resizable: false,
-                draggable: false,
-                show: {
-                    effect: "fade",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "fade",
-                    duration: 1000
-                }
-            });
-
-            socket.on('logged-in', data => {
-                (data.perms.includes('createChats')) ? $('#create').show() : $('#create').hide();
-                (data.perms.includes('createChatByName')) ? $('#namecheckbox').show() : $('#namecheckbox').hide();
-            });
-
-            socket.on('createChatError', msg => alert(msg));
-
-            function newChat() {
-                socket.emit('newChat', { name: $('#nameChat').val(), visible: $('#visible').is(':checked'), nameAsPath: $('#nameaschat').is(':checked') });
-                $('#createChat').dialog('close');
-            }
-
-            socket.on('chatCreated', url => window.location.href = url);
+            let SBcard = new SimpleBar($('#card')[0]);
         </script>
     </body>
 </html>

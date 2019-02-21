@@ -9,6 +9,6 @@ exports.run = (req, res) => {
             isAuthenticated: req.isAuthenticated()
         });
     } else {
-        res.send('Not a valid user ' + req.params.userId);
+        res.render('invalidUser', { invId: req.params.userId });
     }
 }

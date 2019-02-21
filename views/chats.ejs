@@ -71,7 +71,16 @@
                 }
             });
 
-            socket.on('createChatError', msg => alert(msg));
+            socket.on('chatCreated', (err, chat) => {
+                if(err) return alert(err);
+                
+                $('#chats').append(`
+                <tr>
+                    <td>${chat.name}</td>
+                    <td><a href="${window.location.href}/${chat.path}">${window.location.href}/${chat.path}</a></td>
+                </tr>
+                `);
+            });
 
             function newChat() {
                 socket.emit('newChat', { name: $('#nameChat').val(), visible: $('#visible').is(':checked'), nameAsPath: $('#nameaschat').is(':checked') });

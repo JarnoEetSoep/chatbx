@@ -34,6 +34,7 @@ const session = expressSession({
     store: store
 });
 const pp2sio = new class pp2sio extends require('events') { constructor() { super() } };  // PassPort to Socket.IO, we need it when we logout
+pp2sio.setMaxListeners(10000);
 
 passport.use(new LocalStrategy((username, password, done) => {
     let user = db.users.filter(u => u.username == username)[0];
@@ -154,7 +155,7 @@ io.on('connection', socket => {
     });
     
     socket.on('message', data => {
-        if(!db.ranks[socket.user.rank].permissions.includes('sendMessages')) return socket.emit('message', { message: "[Bx] You are not allowed to send messages", username: "" });
+        if(!db.ranks[socket.user.rank].permissions.includes('sendMessages')) return socket.emit('message', { message: '[Bx]: You are not allowed to send messages' });
         
         if(data.message.startsWith('/') && db.ranks[socket.user.rank].permissions.includes('commands')) {
             return commandHandler(io, socket, data.message.trim(), users, db, getSockets);
@@ -176,16 +177,8 @@ io.on('connection', socket => {
         pp2sio.removeListener('logout', logoutCb);
     });
 
-    socket.on('getChats', () => {
-        cts = (db.ranks[socket.user.rank].permissions.includes('seeAllChats')) ? db.chats : db.chats.filter(c => c.type == 'public');
-        socket.emit('giveChats', {
-            chats: cts,
-            perms: db.ranks[socket.user.rank].permissions
-        });
-    });
-
     socket.on('newChat', data => {
-        if(!db.ranks[socket.user.rank].permissions.includes("createChats")) return;
+        if(!db.ranks[socket.user.rank].permissions.includes('createChats')) return;
 
         let chatId;
         do {
@@ -198,8 +191,8 @@ io.on('connection', socket => {
 
         let pathName = (db.ranks[socket.user.rank].permissions.includes('createChatByName')) ? (data.nameAsPath) ? data.name : chatId : chatId;
         if(db.chats.filter(c => c.path == pathName).length != 0) {
-            if(data.nameAsPath) return socket.emit('createChatError', `Chat with path /chats/${pathName} does already exist`);
-            else return socket.emit('createChatError', `This error should NEVER occur. Take contact with a developer about 'error 100'`);
+            if(data.nameAsPath) return socket.emit('chatCreated', `Chat with path /chats/${pathName} does already exist`);
+            else return socket.emit('chatCreated', `This error should NEVER occur. Take contact with a developer about 'error 100'`);
         }
 
         db.chats.push({
@@ -217,11 +210,11 @@ io.on('connection', socket => {
 const messageParser = (msg, ranks, perms, user) => {
     let res = ` ${msg} `;
     // special chars
-    res = res.replace(/&/g,"&amp;");
-    res = res.replace(/</g,"&lt;");
-    res = res.replace(/>/g,"&gt;");
-    res = res.replace(/"/g,"&#34;");
-    res = res.replace(/'/g,"&#39;");
+    res = res.replace(/&/g,'&amp;');
+    res = res.replace(/</g,'&lt;');
+    res = res.replace(/>/g,'&gt;');
+    res = res.replace(/'/g,'&#34;');
+    res = res.replace(/'/g,'&#39;');
     // markdown hyperlinks: [google](https://www.google.com) => <a href="https://www.google.com">google</a>
     res = res.replace(/\[(.*?)\]\((https?:\/\/\w*\.\w*\.?[^\s]*)\)/g, '<a href="$2">$1</a>');
     // just a normal link: https://www.google.com => <a href="https://www.google.com">https://www.google.com</a>
@@ -236,7 +229,7 @@ const messageParser = (msg, ranks, perms, user) => {
     res = res.replace(/_(\S+)_/g, '<i>$1</i>');
     res = res.replace(/\*(\S+)\*/g, '<i>$1</i>');
     // emoji
-    db.emoji.forEach(e => res = res.replace(new RegExp(e.regexp, 'g'), e.value));
+    db.emoji.forEach(e => res = res.replace(new RegExp(e.regexp, 'g'), `<span class="emoji">${e.value}</span>`));
 
     res = res.trim();
     

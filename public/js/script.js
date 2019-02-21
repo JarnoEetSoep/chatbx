@@ -1,31 +1,3 @@
-$(document).ready(() => {
-    $('#login').dialog({
-        autoOpen: false,
-        modal: true,
-        resizable: false,
-        draggable: false,
-        width: 650,
-        height: 400,
-        show: {
-            effect: "fade",
-            duration: 1000
-        },
-        hide: {
-            effect: "fade",
-            duration: 1000
-        }
-    });
-
-    socket.on('logged-in', data => {
-        $('#login').dialog('close');
-    });
-
-    socket.on('regError', msg => alert(msg));
-    socket.on('loginError', msg => alert(msg));
-
-    socket.on('redirect', data => window.location.href = data.url);
-});
-
 let username = false;
 let password = false;
 

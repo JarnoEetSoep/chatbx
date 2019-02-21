@@ -1,6 +1,13 @@
+@font-face {
+    font-family: EmojiOneColor;
+    src: url(../webfonts/EmojiOneColor.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     box-sizing: border-box;
-    font-family: 'Roboto';
+    font-family: roboto;
 }
 
 html {
@@ -33,6 +40,11 @@ p.message {
     border-bottom: 1px solid #ccc;
     word-break: break-all;
     white-space: pre-wrap;
+}
+
+.emoji {
+    font-family: EmojiOneColor !important;
+    font-size: 1.5rem;
 }
 
 .message {
@@ -140,4 +152,8 @@ p.message {
 
 .row-link {
     cursor: pointer;
+}
+
+.nav-item, .center {
+    text-align: center;
 }
