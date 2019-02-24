@@ -221,11 +221,9 @@ const messageParser = (msg, ranks, perms, user) => {
         if(url.trim().match(/(.jpg|.png|.jpeg|.gif|.tiff)$/) && perms.includes('sendImages')) re += `\n<img src="${url.trim()}"></img>`
         return re;
     })
-    // markdown layout __, _, **, *
-    res = res.replace(/__(\S+)__/g, '<b>$1</b>');
+    // markdown layout __, **
+    res = res.replace(/__(\S+)__/g, '<i>$1</i>');
     res = res.replace(/\*\*(\S+)\*\*/g, '<b>$1</b>');
-    res = res.replace(/_(\S+)_/g, '<i>$1</i>');
-    res = res.replace(/\*(\S+)\*/g, '<i>$1</i>');
     // emoji are done client side
 
     res = res.trim();
