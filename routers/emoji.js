@@ -1,4 +1,3 @@
-const emoji = require('../db/emoji.json');
 exports = module.exports = {};
 
 exports.run = (req, res) => {
