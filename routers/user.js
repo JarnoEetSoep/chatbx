@@ -9,6 +9,9 @@ exports.run = (req, res) => {
             isAuthenticated: req.isAuthenticated()
         });
     } else {
-        res.render('invalidUser', { invId: req.params.userId });
+        res.render('invalidUser', {
+            invId: req.params.userId,
+            isAuthenticated: req.isAuthenticated()
+        });
     }
 }

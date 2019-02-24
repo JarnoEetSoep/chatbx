@@ -49,7 +49,7 @@
             </div>
         </div>
         <%- include partials/scripts %>
-        <script src='/js/chat.js'></script>
+        <script src="/js/chat.js"></script>
         <script>
             const socket = io.connect($(location).attr("origin"));
             socket.chatId = '<%- chatId %>';

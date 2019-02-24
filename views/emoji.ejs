@@ -9,26 +9,79 @@
             <div class="row page-head">
                 <%- include partials/menu %>
             </div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Emoji</th>
-                        <th scope="col">Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <% emoji.forEach(e => { %>
-                    <tr>
-                        <td><span class="emoji"><%= e.value %></span></td>
-                        <td><%= e.name %></td>
-                    </tr>
+            <div id="tabs">
+                <ul>
+                    <% categories.forEach(cat => { %>
+                        <li><a href="#<%- cat %>"><%= cat %></a></li>
+                    <% }); %>
+                </ul>
+                <% categories.forEach(cat => { %>
+                    <div id="<%- cat %>">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Emoji</th>
+                                    <th scope="col">Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emojis-<%- cat %>"></tbody>
+                        </table>
+                    </div>
                 <% }); %>
-                </tbody>
-            </table>
+            </div>
         </div>
         <%- include partials/scripts %>
         <script>
             const socket = io.connect($(location).attr("origin"));
+
+            $('#tabs').tabs();
+
+            const categories = ['people', 'flags', 'symbols', 'activity', 'objects', 'travel', 'nature', 'food', 'regional', 'modifier'];
+            let divided = {
+                people: {
+                    people1: [],
+                    people2: [],
+                    people3: [],
+                    people4: []
+                },
+                flags: [],
+                symbols: [],
+                activity: [],
+                objects: [],
+                travel: [],
+                nature: [],
+                food: [],
+                regional: [],
+                modifier: []
+            };
+
+            Object.keys(emojione.emojioneList).forEach(e => {
+                categories.forEach(cat => {
+                    if(emojione.emojioneList[e].category == cat && cat != 'people') return divided[cat].push(e);
+                    if(emojione.emojioneList[e].category == cat && cat == 'people') {
+                        if(divided.people.people1.length < 326) return divided.people.people1.push(e);
+                        else if(divided.people.people2.length < 326) return divided.people.people2.push(e);
+                        else if(divided.people.people3.length < 325) return divided.people.people3.push(e);
+                        else divided.people.people4.push(e);
+                    }
+                });
+            });
+
+            $(document).ready(() => {
+                divided.people.people1.forEach(emoji => $('#emojis-People1').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.people.people2.forEach(emoji => $('#emojis-People2').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.people.people3.forEach(emoji => $('#emojis-People3').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.people.people4.forEach(emoji => $('#emojis-People4').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.flags.forEach(emoji => $('#emojis-Flags').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.symbols.forEach(emoji => $('#emojis-Symbols').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.activity.forEach(emoji => $('#emojis-Activity').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.objects.forEach(emoji => $('#emojis-Objects').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.travel.forEach(emoji => $('#emojis-Travel').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.nature.forEach(emoji => $('#emojis-Nature').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.food.forEach(emoji => $('#emojis-Food').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.regional.forEach(emoji => $('#emojis-Regional').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+                divided.modifier.forEach(emoji => $('#emojis-Modifier').append(`<tr><td>${emojione.toImage(emoji)}</td><td>${emoji}</td></tr>`));
+            });
         </script>
     </body>
 </html>

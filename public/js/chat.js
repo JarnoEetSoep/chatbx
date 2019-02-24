@@ -1,19 +1,16 @@
 $(() => {
     let message = $('#message');
-    //let username = $('#username');
     let send_message = $('#send_message');
-    //let send_username = $('#send_username');
-    //let chatroom = $('#chatroom');
 
     socket.on('othermessage', data => {
         notification_sound.play();
         let d = new Date();
-        $("#chatroom .simplebar-content").prepend(`<p class="message">${data.message}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
+        $("#chatroom .simplebar-content").prepend(`<p class="message">${emojione.toImage(data.message)}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
     });
 
     socket.on('message', data => {
         let d = new Date();
-        $("#chatroom .simplebar-content").prepend(`<p class="message">${data.message}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
+        $("#chatroom .simplebar-content").prepend(`<p class="message">${emojione.toImage(data.message)}<i class="timestamp">${(d.getHours().toString().length == 1) ? `0${d.getHours()}` : d.getHours()}:${(d.getMinutes().toString().length == 1) ? `0${d.getMinutes()}` : d.getMinutes()}</i></p>`);
     });
 
     send_message.click(() => {
@@ -54,8 +51,6 @@ $(() => {
         if($('#newusrname').val() == "") return;
         if($('#newusrname').val().includes(" ")) return alert("Username may not contain any whitespace");
         socket.emit('change_username', {username: $('#newusrname').val()});
-        // $('#settingsModal').dialog('close');
-        // $('#newusrname').val("");
     });
 
     $('#theme').change(() => {
@@ -118,23 +113,23 @@ $(() => {
         $(selector).resizable({
             maxWidth: $('#chatroom').width(),
             start: (event, ui) => {
-                ui.element.append($("<div/>", {
-                    id: "iframe-barrier",
+                ui.element.append($('<div/>', {
+                    id: 'iframe-barrier',
                     css: {
-                        position: "absolute",
+                        position: 'absolute',
                         top: 0,
                         right: 0,
                         bottom: 0,
                         left: 0,
-                        "z-index": 10
+                        'z-index': 10
                     }
                 }));
             },
             stop: (event, ui) => {
-                $("#iframe-barrier", ui.element).remove();
+                $('#iframe-barrier', ui.element).remove();
             },
             resize: (event, ui) => {
-                $("iframe", ui.element).width(ui.size.width).height(ui.size.height);
+                $('iframe', ui.element).width(ui.size.width).height(ui.size.height);
             }
         });
     });

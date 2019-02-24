@@ -3,7 +3,6 @@ const app = express();
 let db = {};
 db.chats = require('./db/chats.json');
 db.users = require('./db/users.json');
-db.emoji = require('./db/emoji.json');
 db.ranks = require('./db/ranks.json');
 const fs = require('fs');
 const https = require('https');
@@ -180,13 +179,12 @@ io.on('connection', socket => {
     socket.on('newChat', data => {
         if(!db.ranks[socket.user.rank].permissions.includes('createChats')) return;
 
-        let chatId;
+        let chatId = '';
         do {
-            let chars = [];
+            chatId = '';
             for(let x = 0; x < 10; x++) {
-                chars.push(Math.floor(Math.random() * 10));
+                chatId += Math.floor(Math.random() * 10);
             }
-            chatId = chars.join('');
         } while(db.chats.filter(c => c.id == chatId).length != 0);
 
         let pathName = (db.ranks[socket.user.rank].permissions.includes('createChatByName')) ? (data.nameAsPath) ? data.name : chatId : chatId;
@@ -228,8 +226,7 @@ const messageParser = (msg, ranks, perms, user) => {
     res = res.replace(/\*\*(\S+)\*\*/g, '<b>$1</b>');
     res = res.replace(/_(\S+)_/g, '<i>$1</i>');
     res = res.replace(/\*(\S+)\*/g, '<i>$1</i>');
-    // emoji
-    db.emoji.forEach(e => res = res.replace(new RegExp(e.regexp, 'g'), `<span class="emoji">${e.value}</span>`));
+    // emoji are done client side
 
     res = res.trim();
     

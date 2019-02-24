@@ -1,3 +1,7 @@
+$(document).ready(() => {
+    //
+});
+
 let username = false;
 let password = false;
 

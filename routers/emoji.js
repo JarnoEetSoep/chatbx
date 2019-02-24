@@ -12,9 +12,10 @@ exports.run = (req, res) => {
     });
 
     res.render('emoji', {
-        emoji: e,
+        emoji: JSON.stringify(e),
         title: 'Emoji list',
-        isAuthenticated: req.isAuthenticated()
+        isAuthenticated: req.isAuthenticated(),
+        categories: ['People1', 'People2', 'People3', 'People4', 'Flags', 'Symbols', 'Activity', 'Objects', 'Travel', 'Nature', 'Food', 'Regional', 'Modifier']
     });
 }
 
