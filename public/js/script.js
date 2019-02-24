@@ -1,5 +1,16 @@
 $(document).ready(() => {
-    //
+    $(window).scroll(() => {
+        if($(this).scrollTop() > 1000) {
+            $('.scrollToTop').addClass('show');
+        } else {
+            $('.scrollToTop').removeClass('show');
+        }
+    });
+
+    $('.scrollToTop').click(() => {
+        $('html, body').animate({ scrollTop: 0 }, 800);
+        return false;
+    });
 });
 
 let username = false;

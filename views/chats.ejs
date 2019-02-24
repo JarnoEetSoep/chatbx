@@ -38,6 +38,7 @@
                 <button class="btn btn-outline-success" onclick="newChat();socket.emit('getChats');">Make chat</button>
             </div>
         </div>
+        <%- include partials/scrollToTop %>
         <%- include partials/scripts %>
         <script>
             const socket = io.connect($(location).attr("origin"));

@@ -146,3 +146,17 @@ p.message {
 .nav-item, .center {
     text-align: center;
 }
+
+.scrollToTop {
+    position: fixed;
+    bottom: -50px;
+    right: 20px;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+.scrollToTop.show {
+    bottom: 20px;
+}
