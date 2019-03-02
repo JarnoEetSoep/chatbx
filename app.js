@@ -32,7 +32,7 @@ const session = expressSession({
     saveUninitialized: true,
     store: store
 });
-const pp2sio = new class pp2sio extends require('events') { constructor() { super() } };  // PassPort to Socket.IO, we need it when we logout
+const pp2sio = new class pp2sio extends require('events').EventEmitter {};  // PassPort to Socket.IO, we need it when we logout
 pp2sio.setMaxListeners(10000);
 
 passport.use(new LocalStrategy((username, password, done) => {
@@ -70,7 +70,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieparser(process.env.SECRET_KEY_BASE));
 app.use((req, res, next) => {
-    if(req.protocol == 'http') res.redirect(`https://chatbx.herokuapp.com${req.path}`);
+    if(req.protocol == 'http') return res.redirect(`https://chatbx.herokuapp.com${req.path}`);
     next();
 });
 
