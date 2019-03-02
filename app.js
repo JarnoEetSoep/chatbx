@@ -69,6 +69,9 @@ app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieparser(process.env.SECRET_KEY_BASE));
+app.use((req, res, next) => {
+    if(req.protocol == 'http') res.redirect(`https://chatbx.herokuapp.com${req.path}`);
+});
 
 app.get('/', (req, res) => require('./routers/index').run(req, res));
 app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));
