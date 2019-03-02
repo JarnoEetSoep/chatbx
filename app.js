@@ -23,6 +23,7 @@ const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 const sharedsession = require('express-socket.io-session');
 const handler404 = require('./routers/404');
+const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 
 if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'Keyboard cat';
 const session = expressSession({
@@ -69,10 +70,7 @@ app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieparser(process.env.SECRET_KEY_BASE));
-app.use((req, res, next) => {
-    if(req.protocol == 'http') return res.redirect(`https://chatbx.herokuapp.com${req.path}`);
-    next();
-});
+app.use(redirectToHTTPS());
 
 app.get('/', (req, res) => require('./routers/index').run(req, res));
 app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));
