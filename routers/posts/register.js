@@ -1,8 +1,18 @@
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const { request, response } = require('express');
+const passport = require('passport');
 
 exports = module.exports = {};
 
+/**
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ * @param {Function} next 
+ * @param {passport} passport
+ * @param {any[]} users
+ */
 exports.run = (req, res, next, passport, users) => {
     // username
     if(!(req.body.username.length > 1 && req.body.username.length < 21 && req.body.username.match(/^[0-9a-zA-Z_]+$/))) return next(`${data.username} cannot be used.`);

@@ -1,9 +1,15 @@
 const db = {};
 db.chats = require('../db/chats.json');
 db.ranks = require('../db/ranks.json');
+const { request, response } = require('express');
 
 exports = module.exports = {};
 
+/**
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
 exports.run = (req, res) => {
     let cts;
     if(req.user && db.ranks[req.user.rank].permissions.includes('seeAllChats')) cts = JSON.stringify(db.chats);

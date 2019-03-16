@@ -1,5 +1,15 @@
+const { request, response } = require('express');
+const passport = require('passport');
+
 exports = module.exports = {};
 
+/**
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ * @param {Function} next 
+ * @param {passport} passport
+ */
 exports.run = (req, res, next, passport) => {
     passport.authenticate('local', (err, user, info) => {
         if(err) return next(err);

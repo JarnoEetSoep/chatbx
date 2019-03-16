@@ -89,6 +89,9 @@ app.post('/register', (req, res, next) => {
     require('./routers/posts/login').run(req, res, next, passport);
 });
 
+// API
+app.post('/api/:APIpath', (req, res, next) => require('./routers/api').run(req, res, next, io));
+
 app.use((req, res, next) => handler404.run(req, res));
 
 const getSockets = room => {
