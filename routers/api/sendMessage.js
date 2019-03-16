@@ -17,5 +17,8 @@ module.exports = (req, res, ioSrv) => {
 
     ioSrv.to(chat.id).emit('othermessage', { message: message });
 
-    res.send({ status: 1 });
+    res.send({
+        status: 1,
+        msg: message
+    });
 }
