@@ -1,4 +1,3 @@
-const chats = require('../db/chats.json');
 const { request, response } = require('express');
 const { Collection } = require('mongoose');
 
