@@ -7,7 +7,7 @@ exports = module.exports = {};
  * @param {request} req 
  * @param {response} res 
  */
-exports.run = (req, res) => {
+exports.run = async (req, res) => {
     res.render('emoji', {
         title: 'Emoji list',
         isAuthenticated: req.isAuthenticated(),

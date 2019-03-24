@@ -1,7 +1,8 @@
 module.exports = (io, socket, message, users, db, getSockets) => {
     let args = message.split(' ');
     let cmd = args.splice(0,1)[0].slice(1).toLowerCase();
-    let perms = db.ranks[socket.user.rank].permissions;
+    let perms;
+    db.collection('ranks').findOne({ name: socket.user.rank }).then(rank => perms = rank.permissions);
 
     if(cmd == 'help') {
 

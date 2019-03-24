@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><%= title %></title>
+        <%- include partials/head %>
+    </head>
+    <body>
+        <div class="container-fluid contents" id="pageContainer">
+            <div class="forms row">
+                <div class="container-fluid">
+                    <div class="row formcontainer">
+                        <div class="col-sm-12 register">
+                            <div>
+                                <form action="/register" method="post">
+                                    <h2>or register</h2>
+                                    <div class="form-group">
+                                        <label for="regUsername">Username</label>
+                                        <input type="text" name="username" id="regUsername" class="form-control" placeholder="Username" onchange="checkUsername();" />
+                                        <small class="form-text text-muted">2-20 characters, 0-9, a-z, A-Z, _</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="regPass">Password</label>
+                                        <input type="password" name="password" id="regPass" class="form-control" placeholder="Password" onchange="checkPass();" />
+                                        <small class="form-text text-muted">8-20 characters, 0-9, a-z, A-Z, `~!@#$%^&*()-_=+[]{}\|/?.&gt;,&lt;:;"'</small>
+                                    </div>
+                                    <input class="btn btn-success" type="submit" id="submitReg" value="Register" disabled />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include partials/scrollToTop %>
+        <%- include partials/scripts %>
+        <script>
+            const socket = io.connect($(location).attr("origin"));
+        </script>
+    </body>
+</html>

@@ -1,9 +1,5 @@
 const express = require('express');
 const app = express();
-let db = {};
-db.chats = require('./db/chats.json');
-db.users = require('./db/users.json');
-db.ranks = require('./db/ranks.json');
 const fs = require('fs');
 const https = require('https');
 const http = require('http');
@@ -24,6 +20,13 @@ const LocalStrategy = require('passport-local').Strategy;
 const sharedsession = require('express-socket.io-session');
 const handler404 = require('./routers/404');
 const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
+const mongoose = require('mongoose');
+const models = require('./models');
+
+mongoose.connect((process.env.mongoURI) ? process.env.mongoURI : 'mongodb://localhost:27017/chatbx', { useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error: '));
+db.once('open', () => console.log(colors.white.bold('Mongoose connected\n')));
 
 if(!process.env.SECRET_KEY_BASE) process.env.SECRET_KEY_BASE = 'Keyboard cat';
 const session = expressSession({
@@ -37,20 +40,22 @@ const pp2sio = new class pp2sio extends require('events').EventEmitter {};  // P
 pp2sio.setMaxListeners(10000);
 
 passport.use(new LocalStrategy((username, password, done) => {
-    let user = db.users.filter(u => u.username == username)[0];
-    if(!user) return done(null, false, { message: 'Incorrect username.' });
-    if(!bcrypt.compareSync(password, user.password)) return done(null, false, { message: 'Incorrect password.' });
-    return done(null, user);
+    db.collection('users').findOne({ username: username }).then(user => {
+        if(!user) return done(null, false, { message: 'Incorrect username.' });
+        if(!bcrypt.compareSync(password, user.password)) return done(null, false, { message: 'Incorrect password.' });
+        return done(null, user);
+    }).catch(err => done(err));
 }));
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.userId);
 });
 
 passport.deserializeUser((id, done) => {
-    let user = db.users.filter(u => u.id == id)[0];
-    if(!user) user = false;
-    done(null, user);
+    db.collection('users').findOne({ userId: id }).then(user => {
+        if(!user) user = false;
+        done(null, user);
+    }).catch(err => done(err));
 });
 
 const cert = {
@@ -73,24 +78,23 @@ app.use(cookieparser(process.env.SECRET_KEY_BASE));
 app.use(redirectToHTTPS());
 
 app.get('/', (req, res) => require('./routers/index').run(req, res));
-app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res));
+app.get('/chats/:chatId', (req, res) => require('./routers/chat').run(req, res, db.collection('chats')));
 app.get('/emoji(list)?', (req, res) => require('./routers/emoji').run(req, res));
-app.get('/chats', (req, res) => require('./routers/chats').run(req, res));
+app.get('/chats', (req, res) => require('./routers/chats').run(req, res, db.collection('chats'), db.collection('ranks')));
 app.get('/about', (req, res) => require('./routers/about').run(req, res));
-app.get('/users', (req, res) => require('./routers/users').run(req, res));
+app.get('/users', (req, res) => require('./routers/users').run(req, res, db.collection('users')));
 app.get('/login', (req, res) => require('./routers/login').run(req, res));
+app.get('/register', (req, res) => require('./routers/register').run(req, res));
 app.get('/logout', (req, res) => require('./routers/logout').run(req, res, pp2sio));
-app.get('/users/:userId', (req, res) => require('./routers/user').run(req, res));
+app.get('/users/:userId', (req, res) => require('./routers/user').run(req, res, db.collection('users')));
+app.get('/dev/:devPath', (req, res) => require('./routers/dev').run(req, res));
+app.get('/dev', (req, res) => res.redirect('/dev/home'));
 
-app.post('/login', (req, res, next) => require('./routers/posts/login').run(req, res, next, passport));
-app.post('/register', (req, res, next) => {
-    require('./routers/posts/register').run(req, res, next, passport, db.users);
-    db.users = require('./db/users.json');
-    require('./routers/posts/login').run(req, res, next, passport);
-});
+app.post('/login', (req, res, next) => require('./routers/posts/login').run(req, res, next, passport, db));
+app.post('/register', (req, res, next) => require('./routers/posts/register').run(req, res, next, passport, db));
 
 // API
-app.post('/api/:APIpath', (req, res, next) => require('./routers/api').run(req, res, next, io));
+require('./api')(app, io, db);
 
 app.use((req, res, next) => handler404.run(req, res));
 
@@ -159,15 +163,17 @@ io.on('connection', socket => {
     });
     
     socket.on('message', data => {
-        if(!db.ranks[socket.user.rank].permissions.includes('sendMessages')) return socket.emit('message', { message: '[Bx]: You are not allowed to send messages' });
-        
-        if(data.message.startsWith('/') && db.ranks[socket.user.rank].permissions.includes('commands')) {
-            return commandHandler(io, socket, data.message.trim(), users, db, getSockets);
-        }
+        db.collection('ranks').findOne({ name: socket.user.rank }).then(rank => {
+            if(!rank.permissions.includes('sendMessages')) return socket.emit('message', { message: '[Bx]: You are not allowed to send messages' });
 
-        let msg = messageParser(data.message, db.ranks, db.ranks[socket.user.rank].permissions, socket.user);
-        socket.broadcast.to(socket.chatId).emit('othermessage', { message: msg });
-        socket.emit('message', { message: msg });
+            if(data.message.startsWith('/') && rank.permissions.includes('commands')) {
+                return commandHandler(io, socket, data.message.trim(), users, db, getSockets);
+            }
+
+            let msg = messageParser(data.message, rank, socket.user);
+            socket.broadcast.to(socket.chatId).emit('othermessage', { message: msg });
+            socket.emit('message', { message: msg });
+        });
     });
 
     socket.on('typing', () => {
@@ -182,35 +188,54 @@ io.on('connection', socket => {
     });
 
     socket.on('newChat', data => {
-        if(!db.ranks[socket.user.rank].permissions.includes('createChats')) return;
+        db.collection('ranks').findOne({ name: socket.user.rank }).then(rank => {
+            if(!rank.permissions.includes('createChats')) return;
 
-        let chatId = '';
-        do {
-            chatId = '';
-            for(let x = 0; x < 10; x++) {
-                chatId += Math.floor(Math.random() * 10);
+            let chatId = '';
+            do {
+                chatId = '';
+                for(let x = 0; x < 10; x++) {
+                    chatId += Math.floor(Math.random() * 10);
+                }
+            } while(findChatById(db, chatId));
+
+            let pathName = (rank.permissions.includes('createChatByName')) ? (data.nameAsPath) ? data.name : chatId : chatId;
+            if(findChatByPath(db, pathName)) {
+                if(data.nameAsPath) return socket.emit('chatCreated', { error: `Chat with path /chats/${pathName} does already exist` });
+                else return socket.emit('chatCreated', { error: `This error should NEVER occur. Take contact with a developer about 'error C100'` });
             }
-        } while(db.chats.filter(c => c.id == chatId).length != 0);
 
-        let pathName = (db.ranks[socket.user.rank].permissions.includes('createChatByName')) ? (data.nameAsPath) ? data.name : chatId : chatId;
-        if(db.chats.filter(c => c.path == pathName).length != 0) {
-            if(data.nameAsPath) return socket.emit('chatCreated', `Chat with path /chats/${pathName} does already exist`);
-            else return socket.emit('chatCreated', `This error should NEVER occur. Take contact with a developer about 'error 100'`);
-        }
+            newChat = new models.chatModel({
+                name: data.name,
+                chatId: chatId,
+                path: pathName,
+                type: (data.visible) ? 'public' : 'private'
+            });
 
-        db.chats.push({
-            name: data.name,
-            id: chatId,
-            path: pathName,
-            type: (data.visible) ? 'public' : 'private'
+            db.collection('chats').insertOne(newChat).then(chat => {
+                socket.emit('chatCreated', { chat: { name: data.name, path: pathName }});
+            }).catch(err => next(err));
         });
-
-        fs.writeFileSync('./db/chats.json', JSON.stringify(db.chats,null,4));
-        socket.emit('chatCreated', { url: `/chats/${pathName}` });
     });
 });
 
-const messageParser = (msg, ranks, perms, user) => {
+const findChatById = (db, chatId) => {
+    db.collection('chats').findOne({ chatId: chatId }).then(chat => {
+        return chat;
+    }).catch(() => {
+        return null;
+    });
+}
+
+const findChatByPath = (db, path) => {
+    db.collection('chats').findOne({ path: path }).then(chat => {
+        return chat;
+    }).catch(() => {
+        return null;
+    });
+}
+
+const messageParser = (msg, rank, user) => {
     let res = ` ${msg} `;
     // special chars
     res = res.replace(/&/g,'&amp;');
@@ -223,7 +248,7 @@ const messageParser = (msg, ranks, perms, user) => {
     // just a normal link: https://www.google.com => <a href="https://www.google.com">https://www.google.com</a>
     res = res.replace(/([\s](https?:\/\/\w*\.\w*\.?[^\s]*)[\s])/g, url => {
         let re = ` <a href="${url.trim()}">${url.trim()}</a> `;
-        if(url.trim().match(/(.jpg|.png|.jpeg|.gif|.tiff)$/) && perms.includes('sendImages')) re += `\n<img src="${url.trim()}"></img>`
+        if(require('url').parse(url.trim()).path.match(/(.jpg|.png|.jpeg|.gif|.tiff)$/) && rank.permissions.includes('sendImages')) re += `\n<img src="${url.trim()}"></img>`
         return re;
     })
     // markdown layout __, **
@@ -233,7 +258,7 @@ const messageParser = (msg, ranks, perms, user) => {
 
     res = res.trim();
     
-    return `${ranks[user.rank].prefix}${user.name}${ranks[user.rank].suffix}${res}`;
+    return `${rank.prefix}${user.name}${rank.suffix}${res}`;
 }
 
-server.listen(process.env.PORT || 443, '0.0.0.0', () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}\n`)));
+server.listen(process.env.PORT || 443, '0.0.0.0', () => console.log(colors.bold(`Connected on ${server.address().address}:${server.address().port}`)));

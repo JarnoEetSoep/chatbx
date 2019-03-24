@@ -1,5 +1,6 @@
 const { request, response } = require('express');
 const passport = require('passport');
+const { Connection } = require('mongoose');
 
 exports = module.exports = {};
 
@@ -9,14 +10,16 @@ exports = module.exports = {};
  * @param {response} res 
  * @param {Function} next 
  * @param {passport} passport
+ * @param {Connection} db
  */
-exports.run = (req, res, next, passport) => {
+exports.run = async (req, res, next, passport, db) => {
     passport.authenticate('local', (err, user, info) => {
         if(err) return next(err);
         if(!user) return res.redirect('/login');
-        req.logIn(user, err => {
+        req.logIn(user, async err => {
             if(err) return next(err);
-            res.redirect(`/users/${require('../../db/users.json').filter(u => u.username == req.body.username)[0].id}`);
+            const DBuser = await (db.collection('users').findOne({ username: user.username }));
+            res.redirect(`/users/${DBuser.userId}`);
         });
     })(req, res, next);
 };

@@ -1,4 +1,5 @@
 const { request, response } = require('express');
+const { Connection } = require('mongoose');
 
 exports = module.exports = {};
 
@@ -6,19 +7,18 @@ exports = module.exports = {};
  * 
  * @param {request} req 
  * @param {response} res 
+ * @param {Connection} users
  */
-exports.run = (req, res) => {
-    let user = require('../db/users.json').filter(u => u.id == req.params.userId)[0];
-
-    if(user) {
+exports.run = async (req, res, users) => {
+    users.findOne({ userId: req.params.userId }).then(user => {
         res.render('user', {
             title: `User ${user.username}`,
             isAuthenticated: req.isAuthenticated()
         });
-    } else {
+    }).catch(() => {
         res.render('invalidUser', {
             invId: req.params.userId,
             isAuthenticated: req.isAuthenticated()
         });
-    }
+    });
 }

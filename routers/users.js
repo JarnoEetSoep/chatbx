@@ -1,6 +1,5 @@
-const db = {};
-db.users = require('../db/users.json');
 const { request, response } = require('express');
+const { Collection } = require('mongoose');
 
 exports = module.exports = {};
 
@@ -8,11 +7,12 @@ exports = module.exports = {};
  * 
  * @param {request} req 
  * @param {response} res 
+ * @param {Collection} users
  */
-exports.run = (req, res) => {
+exports.run = async (req, res, users) => {
     res.render("users", {
         title: 'Users',
         isAuthenticated: req.isAuthenticated(),
-        users: db.users
+        users: await users.find({}).toArray()
     });
 }

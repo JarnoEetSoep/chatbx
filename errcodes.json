@@ -1,6 +1,7 @@
 [
     {
-        "code": "156",
-        "meaning": "Chat creation failure, means that something went very wrong (app.js:131)"
-    }
+        "code": "C100",
+        "meaning": "Chat creation failure, means that something went very wrong (app.js:205)"
+    },
+    "code"
 ]

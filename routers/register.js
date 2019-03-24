@@ -8,8 +8,8 @@ exports = module.exports = {};
  * @param {response} res 
  */
 exports.run = async (req, res) => {
-    res.render("about", {
-        title: 'About',
+    res.render('register', {
+        title: 'register',
         isAuthenticated: req.isAuthenticated()
     });
 }

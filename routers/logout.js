@@ -9,7 +9,7 @@ exports = module.exports = {};
  * @param {response} res 
  * @param {EventEmitter} pp2sio 
  */
-exports.run = (req, res, pp2sio) => {
+exports.run = async (req, res, pp2sio) => {
     req.logout();
     res.redirect('back');
     return pp2sio.emit('logout');

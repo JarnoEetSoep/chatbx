@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title><%= title %></title>
         <%- include partials/head %>
@@ -72,13 +72,13 @@
                 }
             });
 
-            socket.on('chatCreated', (err, chat) => {
-                if(err) return alert(err);
+            socket.on('chatCreated', data => {
+                if(data.error) return alert(data.error);
                 
                 $('#chats').append(`
                 <tr>
-                    <td>${chat.name}</td>
-                    <td><a href="${window.location.href}/${chat.path}">${window.location.href}/${chat.path}</a></td>
+                    <td>${data.chat.name}</td>
+                    <td><a href="${window.location.href}/${data.chat.path}">${window.location.href}/${data.chat.path}</a></td>
                 </tr>
                 `);
             });

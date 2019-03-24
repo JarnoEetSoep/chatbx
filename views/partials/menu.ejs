@@ -5,7 +5,7 @@
     </button>
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="navbar">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item">
@@ -20,11 +20,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="/users">Users</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/dev/home">Developers</a>
+            </li>
         </ul>
     </div>
     <div class="navbar-collapse collapse w-10 order-2 dual-collapse2 center" id="navbar">
         <% if(!isAuthenticated) { %>
-            <a class="btn btn-outline-secondary" href="/login">Login</a>
+            <a class="btn btn-outline-secondary" href="/login">Login</a>&nbsp;or&nbsp;<a class="btn btn-outline-secondary" href="/register">Register</a>
         <% } else { %>
             <a class="btn btn-outline-secondary" href="/logout">Logout</a>
         <% } %>

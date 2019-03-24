@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title><%= title %></title>
         <%- include partials/head %>
@@ -19,10 +19,10 @@
                 </thead>
                 <tbody>
                 <% users.forEach(user => { %>
-                    <tr onclick="window.location.pathname = '/users/<%- user.id %>';" class="row-link">
+                    <tr onclick="window.location.pathname = '/users/<%- user.userId %>';" class="row-link">
                         <td><%= user.username %></td>
                         <td><%= user.rank %></td>
-                        <td><%= user.id %></td>
+                        <td><%= user.userId %></td>
                     </tr>
                 <% }); %>
                 </tbody>
